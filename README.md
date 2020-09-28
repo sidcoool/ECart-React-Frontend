@@ -4,6 +4,12 @@ ECart React Frontend for adding, updating, retrieving, deleting services and goo
 ## Backend Repository
 [Go to Backend Repository](https://github.com/sidcoool/ECart-Node-Backend)
 
+## Features
+- Login/Signup using Google and Logout
+- View Products.
+- Add your own personal Items
+- Add Products/Items in your Wishlist etc
+
 ## Built With
 - React
 - React Hooks
@@ -33,11 +39,15 @@ ECart React Frontend for adding, updating, retrieving, deleting services and goo
 │   │   ├── AddProduct.js
 │   │   ├── DeleteProduct.js
 │   │   ├── EditProduct.js
+│   │   ├── Login.js
+│   │   ├── MyList.js
+│   │   ├── Wishlist.js
 │   │   ├── Products.js
 │   │   └── TopBar.js
 │   ├── Images
 │   │   └── logo.png
 │   ├── index.css
+│   ├── Environments.js
 │   ├── index.js
 │   ├── logo.svg
 │   ├── serviceWorker.js
@@ -48,6 +58,7 @@ ECart React Frontend for adding, updating, retrieving, deleting services and goo
 ## Sreenshots
 ![Screenshot](Screens/s1.png)
 ![Screenshot](Screens/s2.png)
+![Screenshot](Screens/s3.png)
 
 
 ## Contact
