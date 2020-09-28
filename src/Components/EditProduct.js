@@ -5,28 +5,28 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { env } from '../Environments'
 
 toast.configure()
 const EditProduct = (props) => {
     const [modal, setModal] = useState(false);
-    const notifyFail = () => toast.error("Secret Key is Wrong !", {
-        position:"top-center",
-        delay: 1000,
-        autoClose: 2000
+    const notifyFail = () => toast.error("Some Error Occured, try again !", {
+        position: "top-center",
+        delay: 100,
+        autoClose: 1000
     });
 
     const notifySuccess = () => toast.success("Successfully Updated !", {
-        position:"top-center",
-        delay: 1000,
-        autoClose: 2000
+        position: "top-center",
+        delay: 100,
+        autoClose: 1000
     });
 
     const [productDetails, setDetails] = useState({
         product: props.product,
         price: props.price,
         description: props.desc,
-        email: props.email,
-        secret_code: ""
+        contact: props.contact
     });
 
     const [sendFlag, setSendFlag] = useState(false);
@@ -38,16 +38,16 @@ const EditProduct = (props) => {
         if (sendFlag) {
             setSendFlag(false)
             console.log(productDetails)
-            axios.patch(`https://esellapi.herokuapp.com/product/${props.id}`, productDetails).then((res) => {
+            axios.patch(`${env.URL}/${props.id}`, productDetails).then((res) => {
                 console.log(res)
                 toggleModal()
                 if (res.data.updated === "true") {
                     notifySuccess()
-                    setTimeout(()=>{
-                        window.location.reload(false)
-                    },3000)
+                    setTimeout(() => {
+                        window.location.pathname = "/myitems"
+                    }, 1000)
                 }
-                else{
+                else {
                     notifyFail()
                 }
             })
@@ -94,14 +94,9 @@ const EditProduct = (props) => {
 
 
                         <FormGroup>
-                            <Label for="email">Contact Email</Label>
-                            <Input type="email" value={productDetails.email} onChange={e => setDetails({ ...productDetails, email: e.target.value })} placeholder="Enter your conatct email " />
+                            <Label for="contact">Contact Number</Label>
+                            <Input type="text" value={productDetails.contact} onChange={e => setDetails({ ...productDetails, contact: e.target.value })} placeholder="Enter your contact number " />
 
-                        </FormGroup>
-
-                        <FormGroup>
-                            <Label for="password">Enter your Secret Key</Label>
-                            <Input type="password" value={productDetails.secret_code} onChange={e => setDetails({ ...productDetails, secret_code: e.target.value })} placeholder="Enter your Secret Key to authorize the Edit " />
                         </FormGroup>
 
                     </Form>

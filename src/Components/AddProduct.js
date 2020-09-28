@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios'
 import { Alert } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -7,6 +7,11 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ImageUploader from "react-images-upload";
 import Resizer from 'react-image-file-resizer';
+import { env } from '../Environments'
+// import { LoginContext } from './../App'
+
+// const login = useContext(LoginContext)
+
 
 const AddProduct = (props) => {
   const [modal, setModal] = useState(false);
@@ -15,8 +20,9 @@ const AddProduct = (props) => {
     product: "",
     price: 0,
     description: "",
-    email: "",
-    secret_code: ""
+    contact: "",
+    email: localStorage.getItem("email"),
+    wishlistUsers: []
   });
 
   const [sendFlag, setSendFlag] = useState(false);
@@ -25,14 +31,14 @@ const AddProduct = (props) => {
   const toggleModal = () => setModal(!modal);
   const notifyFail = () => toast.error("Sorry, some error occured try adding again!", {
     position: "top-center",
-    delay: 1000,
-    autoClose: 2000
+    delay: 100,
+    autoClose: 1000
   });
 
   const notifySuccess = () => toast.success("Successfully Added Product !", {
     position: "top-center",
-    delay: 1000,
-    autoClose: 2000
+    delay: 100,
+    autoClose: 1400
   });
 
   const [picFile, setPicture] = useState({
@@ -40,10 +46,10 @@ const AddProduct = (props) => {
   });
   // let picFile = {}
 
-  
+
 
   const onDrop = picture => {
-    Resizer.imageFileResizer(picture[0], 500, 500, 'JPEG', 75 , 0,
+    Resizer.imageFileResizer(picture[0], 500, 500, 'JPEG', 75, 0,
       (uri) => {
         console.log(uri);
         setPicture(uri)
@@ -61,15 +67,15 @@ const AddProduct = (props) => {
       // console.log(picFile.toDataURL())
       // https://esellapi.herokuapp.com/product
 
-      axios.post("https://esellapi.herokuapp.com/product", {...productDetails, imgURL: picFile}).then((res) => {
+      axios.post(env.URL, { ...productDetails, imgURL: picFile }).then((res) => {
         console.log(res.data.inserted)
         toggleModal()
 
         if (res.data.inserted === "true") {
           notifySuccess()
           setTimeout(() => {
-            window.location.reload(false)
-          }, 3000)
+            window.location.pathname = "/dashboard"
+          }, 1000)
         }
         else {
           notifyFail()
@@ -82,7 +88,7 @@ const AddProduct = (props) => {
 
 
   const heading = {
-    fontSize: "25px",
+    fontSize: "22px",
     fontWeight: "bold",
     fontFamily: "Garamond",
     borderRadius: "10px",
@@ -98,7 +104,7 @@ const AddProduct = (props) => {
 
   return (
     <div>
-      <Button color="info" style={heading} onClick={toggleModal}>Sell Item</Button>
+      <Button outline color="info" onClick={toggleModal}>Sell Item</Button>
       {/* <NavLink style={heading}>Sell Item</NavLink> */}
 
       <Modal isOpen={modal} toggle={toggleModal}>
@@ -126,18 +132,18 @@ const AddProduct = (props) => {
 
 
             <FormGroup>
-              <Label for="email">Contact Email</Label>
-              <Input type="email" value={productDetails.email} onChange={e => setDetails({ ...productDetails, email: e.target.value })} placeholder="Enter your conatct email " />
+              <Label for="contact">Contact Number</Label>
+              <Input type="text" value={productDetails.contact} onChange={e => setDetails({ ...productDetails, contact: e.target.value })} placeholder="Enter your conatct number " />
 
             </FormGroup>
 
-            <FormGroup>
+            {/* <FormGroup>
               <Label for="password">Enter your Secret Key</Label>
               <Input type="password" value={productDetails.secret_code} onChange={(e) => {
                 setDetails({ ...productDetails, secret_code: e.target.value })
                 console.log(productDetails)
               }} placeholder="Enter an Secret Key for deleing or editing your listing " />
-            </FormGroup>
+            </FormGroup> */}
 
             <ImageUploader
               withIcon={true}
